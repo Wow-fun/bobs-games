@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bloxorz - Bob's Games</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 1em 0;
+    }
+
+    h1 {
+      margin: 0;
+    }
+
+    .container {
+      padding: 2em;
+    }
+
+    .button-link {
+      display: inline-block;
+      padding: 0.75em 1.5em;
+      margin: 1em;
+      background-color: #333;
+      color: white;
+      text-decoration: none;
+      font-size: 1.1em;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+      cursor: pointer;
+    }
+
+    .button-link:hover {
+      background-color: #52527A;
+    }
+
+    .game-container {
+      margin: 2em auto;
+      max-width: 960px;
+      display: none;
+    }
+
+    footer {
+      margin-top: 2em;
+      padding: 1em;
+      background-color: #eee;
+      color: #555;
+    }
+  </style>
+  <!-- Load Ruffle -->
+  <script src="https://xxsibxx.github.io/ruffleembedsetup112/ruffle/ruffle.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Bob's Games</h1>
+  </header>
+
+  <div class="container">
+    <h2>⭕ Bloxorz ⭕</h2>
+
+    <!-- Play button -->
+    <button class="button-link" id="play-button">▶️Play▶️</button>
+
+    <!-- Flash game placeholder -->
+    <div class="game-container" id="game-container"></div>
+  </div>
+
+  <footer>
+    &copy; 2025 Bob's Games. All rights reserved.
+  </footer>
+
+  <script>
+    document.getElementById("play-button").addEventListener("click", function () {
+      const container = document.getElementById("game-container");
+      const button = document.getElementById("play-button");
+
+      container.innerHTML = `
+        <embed height="480" width="100%" pluginspage="http://www.macromedia.com/go/getflashplayer"
+               src="https://wow-fun.github.io/bloxorz/bloxors.swf">
+        </embed>`;
+      container.style.display = "block";
+      button.style.display = "none";
+    });
+  </script>
+</body>
+</html>
