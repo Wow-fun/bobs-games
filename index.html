@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bob's Games</title>
   <style>
     body {
@@ -37,10 +37,39 @@
       font-size: 1.1em;
       border-radius: 8px;
       transition: background-color 0.3s;
+      cursor: pointer;
     }
 
     .button-link:hover {
       background-color: #52527A;
+    }
+
+    form {
+      margin-top: 2em;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+      background-color: #fff;
+      padding: 2em;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    form input,
+    form textarea {
+      width: 100%;
+      padding: 0.75em;
+      margin-bottom: 1em;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1em;
+    }
+
+    .cooldown-message {
+      font-style: italic;
+      color: #888;
+      margin-top: 1em;
     }
 
     footer {
@@ -64,3 +93,46 @@
       <a href="survival-race.html" class="button-link">🏁Survival Race🏁️</a>
       <a href="impossible-quiz.html" class="button-link">❓Impossible Quiz❓</a>
       <a href="bloxorz.html" class="button-link">⭕Bloxorz⭕</a>
+      <a href="bloxorz.html" class="button-link">🎈BTD3🎈</a>
+    </div>
+
+    <form id="contact-form" action="https://formsubmit.co/wowfun.cc@gmail.com" method="POST">
+      <h3>Contact Bob</h3>
+      <input type="text" name="topic" placeholder="Topic" required>
+      <input type="email" name="email" placeholder="Your email" required>
+      <textarea name="message" placeholder="Your message" rows="5" required></textarea>
+      <button type="submit" class="button-link">Send</button>
+
+      <!-- Hidden fields -->
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" value="https://bobs-games.vercel.app">
+      <input type="hidden" name="_subject" value="Bob's Games Contact Form">
+    </form>
+
+    <p class="cooldown-message" id="cooldown-msg" style="display: none;">You’ve already submitted. Please wait 1 hour before sending another message.</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Bob's Games. All rights reserved.
+  </footer>
+
+  <script>
+    const form = document.getElementById("contact-form");
+    const cooldownMsg = document.getElementById("cooldown-msg");
+    const cooldownKey = "bobsgames_form_cooldown";
+    const oneHour = 60 * 60 * 1000; // 1 hour in ms
+
+    const lastSubmit = localStorage.getItem(cooldownKey);
+    const now = new Date().getTime();
+
+    if (lastSubmit && now - lastSubmit < oneHour) {
+      form.style.display = "none";
+      cooldownMsg.style.display = "block";
+    }
+
+    form.addEventListener("submit", () => {
+      localStorage.setItem(cooldownKey, new Date().getTime());
+    });
+  </script>
+</body>
+</html>
