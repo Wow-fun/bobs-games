@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bloxorz - Bob's Games</title>
+  <script src="https://xxsibxx.github.io/ruffleembedsetup112/ruffle/ruffle.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    header {
+      background-color: #333;
+      color: white;
+      padding: 1em 0;
+    }
+
+    h1 {
+      margin: 0;
+    }
+
+    .container {
+      padding: 2em;
+    }
+
+    .button-link {
+      display: inline-block;
+      padding: 0.75em 1.5em;
+      margin: 1em;
+      background-color: #333;
+      color: white;
+      text-decoration: none;
+      font-size: 1.1em;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+      cursor: pointer;
+    }
+
+    .button-link:hover {
+      background-color: #52527A;
+    }
+
+    .game-container {
+      width: 100%;
+      max-width: 960px;
+      margin: 2em auto;
+      display: none;
+      border: 4px solid black;
+      border-radius: 8px;
+      box-shadow: 15px 15px 10px rgba(0, 0, 0, 0.5),
+                  -3px -3px 5px rgba(255, 255, 255, 0.5);
+    }
+
+    footer {
+      margin-top: 2em;
+      padding: 1em;
+      background-color: #eee;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Bob's Games</h1>
+  </header>
+
+  <div class="container">
+    <h2>🎈BTD3🎈<h2>
+    <button class="button-link" id="play-button">▶️ Play ▶️</button>
+
+    <div class="game-container" id="game-box">
+      <embed
+        height="480"
+        width="100%"
+        pluginspage="http://www.macromedia.com/go/getflashplayer"
+        src="https://wow-fun.github.io/BTD-3/Bloons_Tower_Defense_3.swf"
+      ></embed>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Bob's Games. All rights reserved.
+  </footer>
+
+  <script>
+    document.getElementById("play-button").addEventListener("click", function () {
+      document.getElementById("play-button").style.display = "none";
+      document.getElementById("game-box").style.display = "block";
+    });
+  </script>
+</body>
+</html>
