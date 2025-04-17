@@ -105,6 +105,31 @@
     .rating-section input {
       margin-right: 10px;
     }
+
+    .comments-list {
+      margin-top: 2em;
+      padding: 1em;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-bottom: 2em;
+    }
+
+    .comment {
+      margin-bottom: 1.5em;
+      padding-bottom: 1em;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .comment .rating {
+      font-weight: bold;
+      color: #ff8c00;
+    }
+
+    .comment .text {
+      margin-top: 0.5em;
+      font-size: 1.1em;
+    }
   </style>
 </head>
 <body>
@@ -154,6 +179,9 @@
       <input type="hidden" name="_subject" value="Monkey Mart Rating">
       <input type="hidden" name="_next" value="https://bobs-games.vercel.app/monkey-mart.html">
     </form>
+
+    <!-- Comments List -->
+    <div id="comments-list" class="comments-list"></div>
   </div>
 
   <footer>
@@ -168,7 +196,7 @@
   <script>
     let badWords = [];
 
-    fetch('https://github.com/Wow-fun/bobs-games/blob/main/Banned-words.txt') // URL of your badwords.txt file
+    fetch('https://example.com/path/to/badwords.txt') // URL of your badwords.txt file
       .then(response => response.text())
       .then(data => {
         // Split the text by newlines, and remove any empty spaces
@@ -186,6 +214,39 @@
         censored = censored.replace(pattern, "****");
       });
       return censored;
+    }
+
+    // Function to load comments from Firebase
+    function loadComments() {
+      const commentsList = document.getElementById("comments-list");
+      commentsList.innerHTML = ''; // Clear current comments
+
+      const db = firebase.firestore();
+      db.collection("monkeymart-comments")
+        .orderBy("date", "desc")
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            const data = doc.data();
+            const commentDiv = document.createElement("div");
+            commentDiv.classList.add("comment");
+
+            const ratingDiv = document.createElement("div");
+            ratingDiv.classList.add("rating");
+            ratingDiv.textContent = `Rating: ${'⭐'.repeat(data.rating)}`;
+
+            const commentTextDiv = document.createElement("div");
+            commentTextDiv.classList.add("text");
+            commentTextDiv.textContent = data.comment;
+
+            commentDiv.appendChild(ratingDiv);
+            commentDiv.appendChild(commentTextDiv);
+            commentsList.appendChild(commentDiv);
+          });
+        })
+        .catch(error => {
+          console.error("Error loading comments: ", error);
+        });
     }
 
     // Form submit event listener
@@ -225,17 +286,13 @@
 
       e.target.reset();
       alert("Thanks for your feedback!");
+      
+      // Reload the comments after submission
+      loadComments();
     });
+
+    // Load comments when the page is loaded
+    window.onload = loadComments;
 
     // Play button functionality
     document.getElementById("play-button").addEventListener("click", function () {
-      const iframe = document.getElementById("game-frame");
-      const button = document.getElementById("play-button");
-
-      iframe.src = "https://monkey-mart-v2-1r.vercel.app/";
-      iframe.style.display = "block";
-      button.style.display = "none"; // hide the button
-    });
-  </script>
-</body>
-</html>
