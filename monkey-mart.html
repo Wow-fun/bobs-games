@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bob's Games - Monkey Mart</title>
+  <title>Bob's Games</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -37,6 +37,7 @@
       font-size: 1.1em;
       border-radius: 8px;
       transition: background-color 0.3s;
+      cursor: pointer;
     }
 
     .button-link:hover {
@@ -62,33 +63,105 @@
       color: #555;
     }
 
-    .comments-list {
-      margin-top: 2em;
-      padding: 1em;
+    /* Styling for comment section */
+    .comment-section {
       background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      margin-bottom: 2em;
-      border: 1px solid #ddd;
-      min-height: 50px;
+      padding: 2em;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      margin-top: 2em;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    .comment {
+    .comment-item {
+      background-color: #f9f9f9;
       padding: 1em;
       margin-bottom: 1em;
-      border-bottom: 1px solid #ddd;
+      border-radius: 6px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      font-size: 0.9em;
+      color: black;
+      word-wrap: break-word;
     }
 
-    .rating {
-      font-size: 1.2em;
-      color: gold;
+    .comment-item h4 {
+      margin: 0;
+      font-size: 1.1em;
     }
 
-    .text {
-      margin-top: 0.5em;
+    .comment-item p {
+      margin: 0.5em 0 0;
     }
 
+    .comment-item .rating {
+      color: #ffcc00;
+    }
   </style>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
+  <script>
+    // Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyAYtM3T7WNyaGrjU8NxwoYWrUpdetuouQA",
+      authDomain: "comments-5fd73.firebaseapp.com",
+      projectId: "comments-5fd73",
+      storageBucket: "comments-5fd73.appspot.com",
+      messagingSenderId: "379365554290",
+      appId: "1:379365554290:web:837aa0b24800ef81cdeaeb"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    const db = firebase.firestore();
+
+    // Fetch comments from Firestore and display them
+    function displayComments() {
+      db.collection("comments").get().then((querySnapshot) => {
+        const commentsContainer = document.getElementById("comments-container");
+        commentsContainer.innerHTML = ''; // Clear previous comments
+
+        querySnapshot.forEach((doc) => {
+          const comment = doc.data();
+          const commentElement = document.createElement("div");
+          commentElement.classList.add("comment-item");
+          commentElement.innerHTML = `
+            <h4>${comment.name || "Anonymous"}</h4>
+            <div class="rating">⭐ ${comment.rating}</div>
+            <p>${comment.comment}</p>
+          `;
+          commentsContainer.appendChild(commentElement);
+        });
+      });
+    }
+
+    // Add a comment to Firestore
+    function addComment(e) {
+      e.preventDefault();
+
+      const name = e.target.name.value || "Anonymous";
+      const rating = e.target.rating.value;
+      const comment = e.target.comment.value;
+
+      db.collection("comments").add({
+        name: name,
+        rating: rating,
+        comment: comment
+      }).then(() => {
+        displayComments(); // Refresh the comments list after submitting
+      });
+
+      // Clear the form
+      e.target.reset();
+    }
+
+    window.onload = () => {
+      displayComments(); // Load comments on page load
+    }
+  </script>
 </head>
 <body>
   <header>
@@ -111,14 +184,12 @@
       frameborder="0"
       scrolling="no"
     ></iframe>
-    
+
     <!-- Test label -->
-    <p style="color: #888; font-size: 0.9em; text-align: center;">
-      <em>(this is a test feature)</em>
-    </p>
+    <p style="color: #888; font-size: 0.9em; text-align: center;"><em>(this is a test feature)</em></p>
 
     <!-- Comment and Rating Form -->
-    <form action="https://formsubmit.co/wowfun.cc@gmail.com" method="POST" style="max-width: 500px; margin: 2em auto; background: #fff; padding: 2em; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.2); text-align: left;">
+    <form onsubmit="addComment(event)" style="max-width: 500px; margin: 2em auto; background: #fff; padding: 2em; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.2); text-align: left;">
       <h3 style="text-align: center;">Rate & Comment</h3>
 
       <label for="rating">Rating:</label>
@@ -137,79 +208,21 @@
       <!-- Hidden Fields -->
       <input type="hidden" name="_captcha" value="false">
       <input type="hidden" name="_subject" value="Monkey Mart Rating">
-      <input type="hidden" name="_next" value="https://bobs-games.vercel.app/monkey.mart.html">
+      <input type="hidden" name="_next" value="https://bobs-games.vercel.app/monkey-mart.html">
     </form>
 
     <!-- Comments Section -->
-    <div id="comments-list" class="comments-list"></div>
+    <div class="comment-section" id="comments-container">
+      <h3>Comments & Ratings</h3>
+      <!-- Comments will be displayed here -->
+    </div>
   </div>
 
   <footer>
     &copy; 2025 Bob's Games. All rights reserved.
   </footer>
 
-  <!-- Firebase Scripts -->
-  <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
-
-  <!-- Firebase Initialization -->
-  <script>
-    var firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID",
-      measurementId: "YOUR_MEASUREMENT_ID"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
-    // Function to load comments from Firestore
-    function loadComments() {
-      const commentsList = document.getElementById("comments-list");
-      commentsList.innerHTML = ''; // Clear current comments
-
-      db.collection("monkeymart-comments")
-        .orderBy("date", "desc")
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            const data = doc.data();
-
-            // Create a new comment div
-            const commentDiv = document.createElement("div");
-            commentDiv.classList.add("comment");
-
-            const ratingDiv = document.createElement("div");
-            ratingDiv.classList.add("rating");
-            ratingDiv.textContent = `Rating: ${'⭐'.repeat(data.rating)}`;
-
-            const commentTextDiv = document.createElement("div");
-            commentTextDiv.classList.add("text");
-            commentTextDiv.textContent = data.comment;
-
-            // Append to the comments list
-            commentDiv.appendChild(ratingDiv);
-            commentDiv.appendChild(commentTextDiv);
-            commentsList.appendChild(commentDiv);
-          });
-        })
-        .catch(error => {
-          console.error("Error loading comments: ", error);
-        });
-    }
-
-    // Call loadComments when the page loads
-    window.onload = function() {
-      loadComments();
-    };
-  </script>
-
-  <!-- JavaScript for Play Button -->
+  <!-- JavaScript -->
   <script>
     document.getElementById("play-button").addEventListener("click", function () {
       const iframe = document.getElementById("game-frame");
