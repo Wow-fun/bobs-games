@@ -63,46 +63,30 @@
       color: #555;
     }
 
-    /* Styling for comment section */
-    .comment-section {
-      background-color: #fff;
-      padding: 2em;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      margin-top: 2em;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
+    /* Custom styling for the comment section */
     .comment-item {
-      background-color: #ffffff;
+      background: #fff;
       padding: 1em;
-      margin-bottom: 1em;
-      border-radius: 6px;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-      font-size: 0.9em;
-      color: black;
-      word-wrap: break-word;
-      text-align: left;
+      margin: 1em 0;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
     .comment-item p {
-      margin: 0.5em 0 0;
+      margin: 0.5em 0;
+      color: #333;
     }
 
-    .comment-item .rating {
-      font-weight: bold;
-      color: #ffcc00;
+    .comment-section {
+      padding: 2em;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      margin-top: 3em;
     }
 
-    .comment-item .email {
-      font-size: 0.8em;
-      color: #888;
-    }
-
-    .comment-item .comment {
-      margin-top: 1em;
+    .comment-section h3 {
+      margin-top: 0;
     }
   </style>
   <!-- Firebase SDK -->
@@ -130,6 +114,11 @@
         const commentsContainer = document.getElementById("comments-container");
         commentsContainer.innerHTML = ''; // Clear previous comments
 
+        if (querySnapshot.empty) {
+          commentsContainer.innerHTML = "<p>No comments yet. Be the first to comment!</p>";
+          return;
+        }
+
         querySnapshot.forEach((doc) => {
           const comment = doc.data();
           const commentElement = document.createElement("div");
@@ -142,7 +131,7 @@
           commentsContainer.appendChild(commentElement);
         });
       }).catch((error) => {
-        console.log("Error fetching comments: ", error);
+        console.error("Error fetching comments: ", error);
       });
     }
 
@@ -161,7 +150,7 @@
       }).then(() => {
         displayComments(); // Refresh the comments list after submitting
       }).catch((error) => {
-        console.log("Error adding comment: ", error);
+        console.error("Error adding comment: ", error);
       });
 
       // Clear the form
@@ -196,7 +185,7 @@
     ></iframe>
 
     <!-- Test label -->
-    <p style="color: #888; font-size: 0.9em; text-align: center;"><em>(this is a test feature)</em></p>
+    <p style="color: #888; font-size: 0.9em; text-align: center;"><em>(this is a test feature it may not work as intended)</em></p>
 
     <!-- Comment and Rating Form -->
     <form onsubmit="addComment(event)" style="max-width: 500px; margin: 2em auto; background: #fff; padding: 2em; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.2); text-align: left;">
