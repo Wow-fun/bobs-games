@@ -61,9 +61,49 @@
       padding: 1em;
       background-color: #eee;
       color: #555;
-      
-      
-      
+    }
+
+    .comment-form {
+      max-width: 500px;
+      margin: 2em auto;
+      background: #fff;
+      padding: 2em;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      text-align: left;
+    }
+
+    .comment-form h3 {
+      text-align: center;
+    }
+
+    .comment-form textarea,
+    .comment-form input {
+      width: 100%;
+      padding: 0.75em;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-bottom: 1em;
+    }
+
+    .comment-form button {
+      width: 100%;
+      margin-top: 1em;
+    }
+
+    .rating-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
+      margin-bottom: 1em;
+    }
+
+    .rating-section label {
+      text-align: left;
+    }
+
+    .rating-section input {
+      margin-right: 10px;
     }
   </style>
 </head>
@@ -88,42 +128,106 @@
       frameborder="0"
       scrolling="no"
     ></iframe>
-    
+
     <!-- Test label -->
-<p style="color: #888; font-size: 0.9em; text-align: center;"><em>(this is a test feature)</em></p>
+    <p style="color: #888; font-size: 0.9em; text-align: center;"><em>(this is a test feature)</em></p>
 
-<!-- Comment and Rating Form -->
-<form action="https://formsubmit.co/wowfun.cc@gmail.com" method="POST" style="max-width: 500px; margin: 2em auto; background: #fff; padding: 2em; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.2); text-align: left;">
-  <h3 style="text-align: center;">Rate & Comment</h3>
+    <!-- Comment and Rating Form -->
+    <form id="feedback-form" class="comment-form">
+      <h3>Rate & Comment</h3>
 
-  <label for="rating">Rating:</label>
-  <div style="display: flex; flex-direction: column; gap: 0.5em; margin: 1em 0;">
-    <label><input type="radio" name="rating" value="1" required> ⭐</label>
-    <label><input type="radio" name="rating" value="2"> ⭐⭐</label>
-    <label><input type="radio" name="rating" value="3"> ⭐⭐⭐</label>
-    <label><input type="radio" name="rating" value="4"> ⭐⭐⭐⭐</label>
-    <label><input type="radio" name="rating" value="5"> ⭐⭐⭐⭐⭐</label>
-  </div>
+      <label for="rating">Rating:</label>
+      <div class="rating-section">
+        <label><input type="radio" name="rating" value="1" required> ⭐</label>
+        <label><input type="radio" name="rating" value="2"> ⭐⭐</label>
+        <label><input type="radio" name="rating" value="3"> ⭐⭐⭐</label>
+        <label><input type="radio" name="rating" value="4"> ⭐⭐⭐⭐</label>
+        <label><input type="radio" name="rating" value="5"> ⭐⭐⭐⭐⭐</label>
+      </div>
 
-  <textarea name="comment" placeholder="Leave a comment..." rows="4" required style="width: 100%; padding: 0.75em; border-radius: 6px; border: 1px solid #ccc;"></textarea>
-  <input type="email" name="email" placeholder="Your email (optional)" style="width: 100%; padding: 0.75em; border-radius: 6px; border: 1px solid #ccc; margin-top: 1em;">
-  <button type="submit" class="button-link" style="width: 100%; margin-top: 1em;">Submit</button>
+      <textarea name="comment" placeholder="Leave a comment..." rows="4" required></textarea>
+      <input type="email" name="email" placeholder="Your email (optional)">
+      <button type="submit" class="button-link">Submit</button>
 
-  <!-- Hidden Fields -->
-  <input type="hidden" name="_captcha" value="false">
-  <input type="hidden" name="_subject" value="Monkey Mart Rating">
-  <input type="hidden" name="_next" value="https://bobs-games.vercel.app">
-</form>
-
-    
+      <!-- Hidden Fields -->
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_subject" value="Monkey Mart Rating">
+      <input type="hidden" name="_next" value="https://bobs-games.vercel.app/monkey-mart.html">
+    </form>
   </div>
 
   <footer>
     &copy; 2025 Bob's Games. All rights reserved.
   </footer>
 
-  <!-- JavaScript -->
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js"></script>
+
+  <!-- Fetch Bad Words from Text File -->
   <script>
+    let badWords = [];
+
+    fetch('https://github.com/Wow-fun/bobs-games/blob/main/Banned-words.txt') // URL of your badwords.txt file
+      .then(response => response.text())
+      .then(data => {
+        // Split the text by newlines, and remove any empty spaces
+        badWords = data.split("\n").map(word => word.trim().toLowerCase());
+      })
+      .catch(err => {
+        console.error("Error loading bad words list:", err);
+      });
+
+    // Function to censor bad words
+    function censorBadWords(text) {
+      let censored = text;
+      badWords.forEach(word => {
+        const pattern = new RegExp(`\\b${word}\\b`, 'gi');
+        censored = censored.replace(pattern, "****");
+      });
+      return censored;
+    }
+
+    // Form submit event listener
+    document.getElementById("feedback-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const rating = document.querySelector("input[name='rating']:checked")?.value;
+      const commentInput = e.target.comment.value.trim();
+
+      if (!rating || !commentInput) {
+        alert("Please complete the form.");
+        return;
+      }
+
+      // Censor the comment text before storing it
+      const censoredComment = censorBadWords(commentInput);
+
+      // Firebase Setup
+      const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_AUTH_DOMAIN",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_STORAGE_BUCKET",
+        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        appId: "YOUR_APP_ID"
+      };
+
+      // Initialize Firebase
+      const app = firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+
+      // Store in Firebase
+      await db.collection("monkeymart-comments").add({
+        rating: parseInt(rating),
+        comment: censoredComment,
+        date: new Date()
+      });
+
+      e.target.reset();
+      alert("Thanks for your feedback!");
+    });
+
+    // Play button functionality
     document.getElementById("play-button").addEventListener("click", function () {
       const iframe = document.getElementById("game-frame");
       const button = document.getElementById("play-button");
