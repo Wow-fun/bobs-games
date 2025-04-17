@@ -37,10 +37,33 @@
       font-size: 1.1em;
       border-radius: 8px;
       transition: background-color 0.3s;
+      cursor: pointer;
     }
 
     .button-link:hover {
       background-color: #52527A;
+    }
+
+    form {
+      margin-top: 2em;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+      background-color: #fff;
+      padding: 2em;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    form input,
+    form textarea {
+      width: 100%;
+      padding: 0.75em;
+      margin-bottom: 1em;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1em;
     }
 
     footer {
@@ -65,4 +88,27 @@
       <a href="impossible-quiz.html" class="button-link">❓Impossible Quiz❓</a>
       <a href="bloxorz.html" class="button-link">⭕Bloxorz⭕</a>
       <a href="BTD3.html" class="button-link">🎈BTD3🎈</a>
-      <a href = "monkey-mart.html" class="button-link">🐵Monkey Mart🐵</a>
+      <a href="monkey-mart.html" class="button-link">🐵Monkey Mart🐵</a>
+    </div>
+
+    <!-- Contact Form -->
+    <form action="https://formsubmit.co/wowfun.cc@gmail.com" method="POST">
+      <h3>Contact Bob</h3>
+      <input type="text" name="topic" placeholder="Topic" required>
+      <input type="email" name="email" placeholder="Your email" required>
+      <textarea name="message" placeholder="Your message" rows="5" required></textarea>
+      <button type="submit" class="button-link">Send</button>
+
+      <!-- Hidden fields -->
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" value="https://bobs-games.vercel.app">
+      <input type="hidden" name="_subject" value="Bob's Games Contact Form">
+    </form>
+
+  </div>
+
+  <footer>
+    &copy; 2025 Bob's Games. All rights reserved.
+  </footer>
+</body>
+</html>
