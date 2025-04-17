@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bob's Games</title>
+  <title>Bob's Games - Monkey Mart</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -37,7 +37,6 @@
       font-size: 1.1em;
       border-radius: 8px;
       transition: background-color 0.3s;
-      cursor: pointer;
     }
 
     .button-link:hover {
@@ -63,49 +62,6 @@
       color: #555;
     }
 
-    .comment-form {
-      max-width: 500px;
-      margin: 2em auto;
-      background: #fff;
-      padding: 2em;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      text-align: left;
-    }
-
-    .comment-form h3 {
-      text-align: center;
-    }
-
-    .comment-form textarea,
-    .comment-form input {
-      width: 100%;
-      padding: 0.75em;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      margin-bottom: 1em;
-    }
-
-    .comment-form button {
-      width: 100%;
-      margin-top: 1em;
-    }
-
-    .rating-section {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5em;
-      margin-bottom: 1em;
-    }
-
-    .rating-section label {
-      text-align: left;
-    }
-
-    .rating-section input {
-      margin-right: 10px;
-    }
-
     .comments-list {
       margin-top: 2em;
       padding: 1em;
@@ -113,23 +69,25 @@
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       margin-bottom: 2em;
+      border: 1px solid #ddd;
+      min-height: 50px;
     }
 
     .comment {
-      margin-bottom: 1.5em;
-      padding-bottom: 1em;
-      border-bottom: 1px solid #ccc;
+      padding: 1em;
+      margin-bottom: 1em;
+      border-bottom: 1px solid #ddd;
     }
 
-    .comment .rating {
-      font-weight: bold;
-      color: #ff8c00;
+    .rating {
+      font-size: 1.2em;
+      color: gold;
     }
 
-    .comment .text {
+    .text {
       margin-top: 0.5em;
-      font-size: 1.1em;
     }
+
   </style>
 </head>
 <body>
@@ -153,16 +111,18 @@
       frameborder="0"
       scrolling="no"
     ></iframe>
-
+    
     <!-- Test label -->
-    <p style="color: #888; font-size: 0.9em; text-align: center;"><em>(this is a test feature)</em></p>
+    <p style="color: #888; font-size: 0.9em; text-align: center;">
+      <em>(this is a test feature)</em>
+    </p>
 
     <!-- Comment and Rating Form -->
-    <form id="feedback-form" class="comment-form">
-      <h3>Rate & Comment</h3>
+    <form action="https://formsubmit.co/wowfun.cc@gmail.com" method="POST" style="max-width: 500px; margin: 2em auto; background: #fff; padding: 2em; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.2); text-align: left;">
+      <h3 style="text-align: center;">Rate & Comment</h3>
 
       <label for="rating">Rating:</label>
-      <div class="rating-section">
+      <div style="display: flex; flex-direction: column; gap: 0.5em; margin: 1em 0;">
         <label><input type="radio" name="rating" value="1" required> ⭐</label>
         <label><input type="radio" name="rating" value="2"> ⭐⭐</label>
         <label><input type="radio" name="rating" value="3"> ⭐⭐⭐</label>
@@ -170,17 +130,17 @@
         <label><input type="radio" name="rating" value="5"> ⭐⭐⭐⭐⭐</label>
       </div>
 
-      <textarea name="comment" placeholder="Leave a comment..." rows="4" required></textarea>
-      <input type="email" name="email" placeholder="Your email (optional)">
-      <button type="submit" class="button-link">Submit</button>
+      <textarea name="comment" placeholder="Leave a comment..." rows="4" required style="width: 100%; padding: 0.75em; border-radius: 6px; border: 1px solid #ccc;"></textarea>
+      <input type="email" name="email" placeholder="Your email (optional)" style="width: 100%; padding: 0.75em; border-radius: 6px; border: 1px solid #ccc; margin-top: 1em;">
+      <button type="submit" class="button-link" style="width: 100%; margin-top: 1em;">Submit</button>
 
       <!-- Hidden Fields -->
       <input type="hidden" name="_captcha" value="false">
       <input type="hidden" name="_subject" value="Monkey Mart Rating">
-      <input type="hidden" name="_next" value="https://bobs-games.vercel.app/monkey-mart.html">
+      <input type="hidden" name="_next" value="https://bobs-games.vercel.app/monkey.mart.html">
     </form>
 
-    <!-- Comments List -->
+    <!-- Comments Section -->
     <div id="comments-list" class="comments-list"></div>
   </div>
 
@@ -188,46 +148,39 @@
     &copy; 2025 Bob's Games. All rights reserved.
   </footer>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js"></script>
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
 
-  <!-- Fetch Bad Words from Text File -->
+  <!-- Firebase Initialization -->
   <script>
-    let badWords = [];
+    var firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID",
+      measurementId: "YOUR_MEASUREMENT_ID"
+    };
 
-    fetch('https://example.com/path/to/badwords.txt') // URL of your badwords.txt file
-      .then(response => response.text())
-      .then(data => {
-        // Split the text by newlines, and remove any empty spaces
-        badWords = data.split("\n").map(word => word.trim().toLowerCase());
-      })
-      .catch(err => {
-        console.error("Error loading bad words list:", err);
-      });
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-    // Function to censor bad words
-    function censorBadWords(text) {
-      let censored = text;
-      badWords.forEach(word => {
-        const pattern = new RegExp(`\\b${word}\\b`, 'gi');
-        censored = censored.replace(pattern, "****");
-      });
-      return censored;
-    }
-
-    // Function to load comments from Firebase
+    // Function to load comments from Firestore
     function loadComments() {
       const commentsList = document.getElementById("comments-list");
       commentsList.innerHTML = ''; // Clear current comments
 
-      const db = firebase.firestore();
       db.collection("monkeymart-comments")
         .orderBy("date", "desc")
         .get()
         .then(querySnapshot => {
           querySnapshot.forEach(doc => {
             const data = doc.data();
+
+            // Create a new comment div
             const commentDiv = document.createElement("div");
             commentDiv.classList.add("comment");
 
@@ -239,6 +192,7 @@
             commentTextDiv.classList.add("text");
             commentTextDiv.textContent = data.comment;
 
+            // Append to the comments list
             commentDiv.appendChild(ratingDiv);
             commentDiv.appendChild(commentTextDiv);
             commentsList.appendChild(commentDiv);
@@ -249,50 +203,22 @@
         });
     }
 
-    // Form submit event listener
-    document.getElementById("feedback-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const rating = document.querySelector("input[name='rating']:checked")?.value;
-      const commentInput = e.target.comment.value.trim();
-
-      if (!rating || !commentInput) {
-        alert("Please complete the form.");
-        return;
-      }
-
-      // Censor the comment text before storing it
-      const censoredComment = censorBadWords(commentInput);
-
-      // Firebase Setup
-      const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_AUTH_DOMAIN",
-        projectId: "YOUR_PROJECT_ID",
-        storageBucket: "YOUR_STORAGE_BUCKET",
-        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-        appId: "YOUR_APP_ID"
-      };
-
-      // Initialize Firebase
-      const app = firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore();
-
-      // Store in Firebase
-      await db.collection("monkeymart-comments").add({
-        rating: parseInt(rating),
-        comment: censoredComment,
-        date: new Date()
-      });
-
-      e.target.reset();
-      alert("Thanks for your feedback!");
-      
-      // Reload the comments after submission
+    // Call loadComments when the page loads
+    window.onload = function() {
       loadComments();
-    });
+    };
+  </script>
 
-    // Load comments when the page is loaded
-    window.onload = loadComments;
-
-    // Play button functionality
+  <!-- JavaScript for Play Button -->
+  <script>
     document.getElementById("play-button").addEventListener("click", function () {
+      const iframe = document.getElementById("game-frame");
+      const button = document.getElementById("play-button");
+
+      iframe.src = "https://monkey-mart-v2-1r.vercel.app/";
+      iframe.style.display = "block";
+      button.style.display = "none"; // hide the button
+    });
+  </script>
+</body>
+</html>
