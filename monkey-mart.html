@@ -76,7 +76,7 @@
     }
 
     .comment-item {
-      background-color: #f9f9f9;
+      background-color: #ffffff;
       padding: 1em;
       margin-bottom: 1em;
       border-radius: 6px;
@@ -84,11 +84,7 @@
       font-size: 0.9em;
       color: black;
       word-wrap: break-word;
-    }
-
-    .comment-item h4 {
-      margin: 0;
-      font-size: 1.1em;
+      text-align: left;
     }
 
     .comment-item p {
@@ -96,7 +92,17 @@
     }
 
     .comment-item .rating {
+      font-weight: bold;
       color: #ffcc00;
+    }
+
+    .comment-item .email {
+      font-size: 0.8em;
+      color: #888;
+    }
+
+    .comment-item .comment {
+      margin-top: 1em;
     }
   </style>
   <!-- Firebase SDK -->
@@ -129,12 +135,14 @@
           const commentElement = document.createElement("div");
           commentElement.classList.add("comment-item");
           commentElement.innerHTML = `
-            <h4>${comment.name || "Anonymous"}</h4>
-            <div class="rating">⭐ ${comment.rating}</div>
-            <p>${comment.comment}</p>
+            <p class="email"><strong>Email:</strong> ${comment.email || "Anonymous"}</p>
+            <p class="rating"><strong>Rating:</strong> ⭐ ${comment.rating}</p>
+            <p class="comment"><strong>Comment:</strong> ${comment.comment}</p>
           `;
           commentsContainer.appendChild(commentElement);
         });
+      }).catch((error) => {
+        console.log("Error fetching comments: ", error);
       });
     }
 
@@ -142,16 +150,18 @@
     function addComment(e) {
       e.preventDefault();
 
-      const name = e.target.name.value || "Anonymous";
+      const email = e.target.email.value || "Anonymous";
       const rating = e.target.rating.value;
       const comment = e.target.comment.value;
 
       db.collection("comments").add({
-        name: name,
+        email: email,
         rating: rating,
         comment: comment
       }).then(() => {
         displayComments(); // Refresh the comments list after submitting
+      }).catch((error) => {
+        console.log("Error adding comment: ", error);
       });
 
       // Clear the form
